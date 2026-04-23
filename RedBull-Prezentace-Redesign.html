@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="slides-format" content="viewport" />
+  <title>Red Bull – Strategická analýza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --color-bg: #0a0f1e;
+      --color-bg-deep: #050814;
+      --color-surface: #11192b;
+      --color-text: #f3f6fb;
+      --color-text-secondary: #cfd7e6;
+      --color-text-muted: #7c8aa5;
+      --color-accent-1: #173c8f;
+      --color-accent-2: #d4af37;
+      --color-accent-3: #d71920;
+      --color-glass-bg: rgba(255,255,255,0.06);
+      --color-glass-border: rgba(255,255,255,0.10);
+      --color-vignette: rgba(0,0,0,0.55);
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+  </style>
+  <style>
+    :root { --color-bg:#0a0f1e; --color-text:#f3f6fb; --glow-color-rgb: 212,175,55; }
+    *{box-sizing:border-box} html,body{margin:0;background:var(--color-bg)}
+    body{font-family:var(--font-body);color:var(--color-text);overflow:hidden;height:100vh;width:100vw}
+    .deck{width:100vw;height:100vh;position:relative}
+    .slide{position:absolute;inset:0;background:linear-gradient(180deg,#0a0f1e 0%,#09101b 40%,#060910 100%);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.97);transition:opacity .65s ease,transform .65s ease;pointer-events:none;overflow:hidden}
+    .slide.active{opacity:1;transform:scale(1);pointer-events:auto}
+    .slide>.content{position:relative;z-index:3;width:100%;max-width:1180px;padding:clamp(1.2rem,3vw,3rem)}
+    .nav-controls{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);display:flex;gap:14px;align-items:center;z-index:100;background:rgba(7,10,18,.78);backdrop-filter:blur(14px);padding:10px 22px;border:1px solid rgba(255,255,255,.1);border-radius:999px}
+    .nav-btn{width:40px;height:40px;border:0;border-radius:999px;background:rgba(255,255,255,.05);color:#d4af37;cursor:pointer;font-size:1.15rem}
+    .slide-dots{display:flex;gap:8px}.dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer}.dot.active{background:#d4af37;transform:scale(1.3)}
+    .slide-counter{font-size:.82rem;color:#93a0bb;min-width:42px;text-align:center}
+    .reveal{opacity:0;transform:translateY(18px)}
+    .gradient-mesh{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+    .blob{position:absolute;border-radius:50%;filter:blur(80px);animation:floatSlow 14s ease-in-out infinite}
+    .blob:nth-child(2){animation:floatDrift 18s ease-in-out infinite}
+    .blob:nth-child(3){animation:floatSlow 20s ease-in-out infinite reverse}
+    .slide::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(120deg,rgba(215,25,32,.07),transparent 25%,transparent 70%,rgba(23,60,143,.18));pointer-events:none}
+    .slide::after{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at center, transparent 50%, rgba(0,0,0,.6) 100%)}
+    .speed-lines{position:absolute;inset:0;z-index:1;opacity:.12;background:repeating-linear-gradient(115deg,transparent 0 140px, rgba(255,255,255,.035) 140px 143px, transparent 143px 260px)}
+    .brand-bar{position:absolute;left:0;top:0;bottom:0;width:8px;background:linear-gradient(180deg,#d71920 0%,#d4af37 45%,#173c8f 100%);z-index:3;box-shadow:0 0 30px rgba(212,175,55,.25)}
+    .eyebrow{font-family:var(--font-display);font-size:.84rem;letter-spacing:.22em;text-transform:uppercase;color:#d4af37}
+    .hero-title{font-family:var(--font-display);font-weight:900;letter-spacing:.04em;text-transform:uppercase;line-height:.92}
+    .rb-card{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:18px 18px 16px 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 16px 50px rgba(0,0,0,.22);backdrop-filter:blur(14px);position:relative;overflow:hidden}
+    .rb-card:before{content:'';position:absolute;left:0;top:0;right:0;height:4px;background:linear-gradient(90deg,#d71920,#d4af37,#173c8f)}
+    .rb-card h3,.rb-card h4{margin:0}
+    .metric{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,4.2rem);line-height:.9;font-weight:900;letter-spacing:.02em}
+    .metric-sub{font-size:.78rem;color:#9eabc4;text-transform:uppercase;letter-spacing:.12em}
+    .logo-wrap{display:flex;align-items:center;justify-content:center;gap:1rem}
+    .bullmark{width:min(28vw,220px);filter:drop-shadow(0 8px 24px rgba(0,0,0,.35)) drop-shadow(0 0 28px rgba(212,175,55,.25));animation:floatIcon 4s ease-in-out infinite}
+    .section-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .section-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .mini{font-size:.93rem;line-height:1.45;color:#d5ddec}
+    .bullet{display:flex;gap:10px;align-items:flex-start;margin:.4rem 0}.bullet-dot{width:10px;height:10px;border-radius:50%;margin-top:.42rem;background:#d4af37;box-shadow:0 0 14px rgba(212,175,55,.45)}
+    .label-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;color:#c9d2e4}
+    .quote{font-size:1.15rem;color:#dbe3f0;line-height:1.5;max-width:820px;margin:0 auto}
+    .subtle{color:#9ca9c2}
+    .panel-title{font-family:var(--font-display);font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;margin-bottom:10px}
+    .swot-tag{font-family:var(--font-display);font-size:1.8rem;font-weight:900;line-height:1;color:#fff;opacity:.95}
+    .tag-green{color:#4ade80}.tag-red{color:#fb7185}.tag-blue{color:#60a5fa}.tag-gold{color:#facc15}
+    .f1-ring{position:absolute;right:-80px;bottom:-80px;width:260px;height:260px;border-radius:50%;border:22px solid rgba(212,175,55,.12);z-index:0}
+    .f1-ring:after{content:'';position:absolute;inset:30px;border-radius:50%;border:10px solid rgba(215,25,32,.12)}
+    canvas.particle-canvas,canvas.particle-canvas-ambient{position:absolute;inset:0;z-index:1}
+    @keyframes floatSlow{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(55px,-32px) scale(1.12)}}
+    @keyframes floatDrift{0%,100%{transform:translate(0,0)}50%{transform:translate(-45px,36px)}}
+    @keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @media (max-width: 900px){.section-grid-3,.section-grid-2{grid-template-columns:1fr}.metric{font-size:2.2rem}}
+  </style>
+</head>
+<body>
+<div class="mouse-spotlight" style="position:fixed;inset:0;z-index:99;pointer-events:none"></div>
+<div class="deck">
+
+<section class="slide active" data-slide="1">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:420px;height:420px;top:-80px;right:-80px;background:#173c8f;opacity:.38"></div>
+    <div class="blob" style="width:320px;height:320px;left:-40px;bottom:-50px;background:#d71920;opacity:.22"></div>
+    <div class="blob" style="width:250px;height:250px;left:20%;top:25%;background:#d4af37;opacity:.18"></div>
+  </div>
+  <div class="speed-lines"></div>
+  <canvas class="particle-canvas"></canvas>
+  <div class="content text-center">
+    <div class="logo-wrap reveal" style="margin-bottom:1rem">
+      <svg class="bullmark" viewBox="0 0 260 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="130" cy="72" r="32" fill="#D4AF37"/>
+        <circle cx="130" cy="72" r="18" fill="#C59B19"/>
+        <path d="M72 88c-19 0-34-12-34-26 0-16 18-28 41-28 10 0 22 3 30 8l16 9-17 4c-5 2-11 4-15 8-5 5-10 17-21 22z" fill="#173C8F"/>
+        <path d="M188 88c19 0 34-12 34-26 0-16-18-28-41-28-10 0-22 3-30 8l-16 9 17 4c5 2 11 4 15 8 5 5 10 17 21 22z" fill="#D71920"/>
+        <path d="M56 54c-6-10-15-15-24-14 7-7 18-8 30-2" stroke="#D4AF37" stroke-width="6" stroke-linecap="round"/>
+        <path d="M204 54c6-10 15-15 24-14-7-7-18-8-30-2" stroke="#D4AF37" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="eyebrow reveal">Strategická analýza značky</div>
+    <h1 class="hero-title reveal" style="font-size:clamp(4rem,10vw,7.8rem);background:linear-gradient(180deg,#f7f8fb 0%,#d4af37 140%);-webkit-background-clip:text;background-clip:text;color:transparent;margin:.2rem 0 .4rem">Red Bull</h1>
+    <p class="reveal" style="font-size:clamp(1rem,2vw,1.35rem);letter-spacing:.22em;text-transform:uppercase;color:#c9d2e4;margin:0 0 1.8rem">Prémiová značka pod tlakem</p>
+    <div class="reveal" style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
+      <span class="label-chip">Jáchym</span><span class="label-chip">Leon</span><span class="label-chip">Kryštof</span><span class="label-chip">Patrik</span>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="2">
+  <div class="brand-bar"></div>
+  <div class="gradient-mesh"><div class="blob" style="width:330px;height:330px;top:-50px;right:-60px;background:#173c8f;opacity:.28"></div><div class="blob" style="width:240px;height:240px;left:10%;bottom:-40px;background:#d4af37;opacity:.12"></div></div>
+  <div class="content">
+    <div class="eyebrow reveal">Představení společnosti</div>
+    <h2 class="hero-title reveal" style="font-size:clamp(2.5rem,5vw,4.2rem);margin:.2rem 0 1rem">Red Bull v číslech</h2>
+    <div class="section-grid-3" style="margin-bottom:16px">
+      <div class="rb-card reveal"><div class="metric" style="color:#f5d25a">55 mil.</div><div class="metric-sub">Plechovek ročně v ČR</div></div>
+      <div class="rb-card reveal"><div class="metric" style="color:#fff">1,3 mld.</div><div class="metric-sub">Čistý obrat</div></div>
+      <div class="rb-card reveal"><div class="metric" style="color:#ff6b6b">30 %+</div><div class="metric-sub">Tržní podíl v ČR</div></div>
+    </div>
+    <div class="section-grid-3">
+      <div class="rb-card reveal"><div class="panel-title">Historie</div><div class="mini"><div class="bullet"><span class="bullet-dot"></span><span><b>1987</b> – založení značky v Rakousku</span></div><div class="bullet"><span class="bullet-dot"></span><span>Vznik celé kategorie energy drinks</span></div><div class="bullet"><span class="bullet-dot"></span><span><b>1998</b> – vstup na český trh</span></div></div></div>
+      <div class="rb-card reveal"><div class="panel-title">Distribuce</div><div class="mini"><div class="bullet"><span class="bullet-dot"></span><span>Dominance v retailu a convenience</span></div><div class="bullet"><span class="bullet-dot"></span><span>On-premise: bary, kluby, čerpačky</span></div><div class="bullet"><span class="bullet-dot"></span><span>Lídr kategorie v ČR</span></div></div></div>
+      <div class="rb-card reveal"><div class="panel-title">Brand power</div><div class="mini"><div class="bullet"><span class="bullet-dot"></span><span>Nejvyšší loajalita zákazníků</span></div><div class="bullet"><span class="bullet-dot"></span><span>Prémiové vnímání navzdory vyšší ceně</span></div><div class="bullet"><span class="bullet-dot"></span><span>Silný lifestyle a sportovní přesah</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="3">
+  <div class="brand-bar"></div>
+  <div class="gradient-mesh"><div class="blob" style="width:380px;height:380px;top:-70px;left:-80px;background:#d71920;opacity:.16"></div><div class="blob" style="width:290px;height:290px;right:-50px;bottom:-50px;background:#173c8f;opacity:.22"></div></div>
+  <div class="content">
+    <div class="eyebrow reveal">Analýza situace</div>
+    <h2 class="hero-title reveal" style="font-size:clamp(2.4rem,4.8vw,4rem);margin:.2rem 0 1rem">Definice problému</h2>
+    <div class="section-grid-2">
+      <div class="rb-card reveal"><div class="panel-title" style="color:#ff7b7b">Silná konkurence</div><div class="mini">Monster, Rockstar i privátní značky tlačí cenou, šířkou portfolia a dostupností.</div></div>
+      <div class="rb-card reveal"><div class="panel-title" style="color:#f5d25a">Prémiová cena vs. inflace</div><div class="mini">Vyšší cena je součástí brand image, ale zároveň zvyšuje citlivost zákazníků na substituty.</div></div>
+      <div class="rb-card reveal"><div class="panel-title" style="color:#ffd9d9">Zdraví a regulace</div><div class="mini">Kritika cukru a kofeinu, tlak na označování a omezení reklamy na mladistvé.</div></div>
+      <div class="rb-card reveal"><div class="panel-title" style="color:#9dc0ff">Změna chování zákazníků</div><div class="mini">Roste poptávka po zero sugar, natural a funkčních produktech s „lepší“ image.</div></div>
+    </div>
+    <div class="rb-card reveal" style="margin-top:16px;text-align:center;padding:18px 24px;background:linear-gradient(90deg,rgba(215,25,32,.12),rgba(212,175,55,.10),rgba(23,60,143,.12))">
+      <div class="hero-title" style="font-size:1.6rem;color:#f7f8fb">Jak udržet prémiovou cenu a zároveň neztratit zákazníky?</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="4">
+  <div class="brand-bar"></div>
+  <div class="gradient-mesh"><div class="blob" style="width:420px;height:420px;top:-90px;right:-80px;background:#173c8f;opacity:.22"></div><div class="blob" style="width:240px;height:240px;left:20%;bottom:-40px;background:#d4af37;opacity:.1"></div></div>
+  <div class="f1-ring"></div>
+  <div class="content">
+    <div class="eyebrow reveal">Strategická analýza</div>
+    <h2 class="hero-title reveal" style="font-size:clamp(2.4rem,4.8vw,4rem);margin:.2rem 0 1rem">SWOT analýza</h2>
+    <div class="section-grid-2">
+      <div class="rb-card reveal"><div class="swot-tag tag-green">S</div><div class="panel-title">Strengths</div><div class="mini">Silná značka, vysoká loajalita, výjimečný marketing, spojení s výkonem a lifestyle.</div></div>
+      <div class="rb-card reveal"><div class="swot-tag tag-red">W</div><div class="panel-title">Weaknesses</div><div class="mini">Vyšší cena, vnímání jako nezdravý produkt, užší portfolio než u některých rivalů.</div></div>
+      <div class="rb-card reveal"><div class="swot-tag tag-blue">O</div><div class="panel-title">Opportunities</div><div class="mini">Sugar-free inovace, health-conscious segment, digitální komunity, nové příchutě.</div></div>
+      <div class="rb-card reveal"><div class="swot-tag tag-gold">T</div><div class="panel-title">Threats</div><div class="mini">Levnější konkurence, regulace, tlak na zdravější složení, substituty typu RTD coffee.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="5">
+  <div class="brand-bar"></div>
+  <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-80px;left:-60px;background:#d71920;opacity:.14"></div><div class="blob" style="width:260px;height:260px;right:-30px;bottom:-30px;background:#173c8f;opacity:.22"></div></div>
+  <canvas class="particle-canvas-ambient"></canvas>
+  <div class="content">
+    <div class="eyebrow reveal">Makrovlivy</div>
+    <h2 class="hero-title reveal" style="font-size:clamp(2.2rem,4.5vw,3.8rem);margin:.2rem 0 1rem">PESTLE doplněk</h2>
+    <div class="section-grid-3">
+      <div class="rb-card reveal"><div class="panel-title">Political / Legal</div><div class="mini">Možné restrikce prodeje mladistvým, citlivější regulace reklamy, tlak na health warning.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Social</div><div class="mini">Roste důraz na zdravý životní styl, nižší cukr, natural image a transparentní složení.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Economic</div><div class="mini">Inflace i tlak na rozpočty domácností zvyšují citlivost na cenu a podporují přechod ke konkurenci.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="6">
+  <div class="brand-bar"></div>
+  <div class="gradient-mesh"><div class="blob" style="width:380px;height:380px;top:-70px;right:-60px;background:#173c8f;opacity:.24"></div><div class="blob" style="width:220px;height:220px;left:10%;bottom:-30px;background:#d4af37;opacity:.1"></div></div>
+  <div class="content">
+    <div class="eyebrow reveal">Trh a rivalové</div>
+    <h2 class="hero-title reveal" style="font-size:clamp(2.2rem,4.5vw,3.8rem);margin:.2rem 0 1rem">Konkurenční prostředí</h2>
+    <div class="section-grid-3">
+      <div class="rb-card reveal"><div class="panel-title">Monster</div><div class="mini">Nejbližší rival, široké portfolio příchutí a silná pozice u mladších segmentů.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Rockstar / PepsiCo</div><div class="mini">Silné distribuční zázemí a schopnost cenového tlaku v retailu.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Health drinks</div><div class="mini">Funkční nápoje, RTD coffee a nootropika mění očekávání kategorie.</div></div>
+    </div>
+    <div class="section-grid-3" style="margin-top:16px">
+      <div class="rb-card reveal"><div class="metric" style="font-size:2.5rem;color:#f5d25a">#1</div><div class="metric-sub">Pozice v ČR</div></div>
+      <div class="rb-card reveal"><div class="metric" style="font-size:2.5rem;color:#fff">55M</div><div class="metric-sub">Roční prodeje</div></div>
+      <div class="rb-card reveal"><div class="metric" style="font-size:2.5rem;color:#ff7b7b">30%+</div><div class="metric-sub">Podíl trhu</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="7">
+  <div class="brand-bar"></div>
+  <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-80px;left:-60px;background:#173c8f;opacity:.2"></div><div class="blob" style="width:280px;height:280px;right:-40px;bottom:-20px;background:#d4af37;opacity:.12"></div></div>
+  <div class="content">
+    <div class="eyebrow reveal">Řešení 1</div>
+    <h2 class="hero-title reveal" style="font-size:clamp(2.2rem,4.5vw,3.8rem);margin:.2rem 0 1rem">Rozšíření health portfolia</h2>
+    <div class="section-grid-2">
+      <div class="rb-card reveal"><div class="panel-title">Sugarfree a Zero</div><div class="mini">Silnější podpora variant s nižším cukrem jako přímá reakce na změnu poptávky.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Editions a příchutě</div><div class="mini">Rozšíření nabídky bez oslabení prémiové identity značky.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Funkční varianty</div><div class="mini">Focus, recovery nebo “better-for-you” positioning jako obrana proti novým substitutům.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Transparentní komunikace</div><div class="mini">Jasně vysvětlovat složení, účel produktu i odpovědné užívání.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="8">
+  <div class="brand-bar"></div>
+  <div class="gradient-mesh"><div class="blob" style="width:400px;height:400px;top:-60px;right:-70px;background:#173c8f;opacity:.24"></div><div class="blob" style="width:260px;height:260px;left:15%;bottom:-40px;background:#d71920;opacity:.14"></div></div>
+  <div class="content">
+    <div class="eyebrow reveal">Řešení 2</div>
+    <h2 class="hero-title reveal" style="font-size:clamp(2.2rem,4.5vw,3.8rem);margin:.2rem 0 1rem">Modernizace komunikace</h2>
+    <div class="section-grid-3">
+      <div class="rb-card reveal"><div class="panel-title">Digitál first</div><div class="mini">TikTok, YouTube, creators a komunitní obsah místo čistě tradiční reklamy.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Media House</div><div class="mini">Vlastní obsah, eventy a sportovní příběhy jako diferenciátor proti cenové konkurenci.</div></div>
+      <div class="rb-card reveal"><div class="panel-title">Výkon v běžném životě</div><div class="mini">Posun od extrémního adrenalinu i k produktivitě, studiu, gamingu a kreativitě.</div></div>
+    </div>
+    <div class="rb-card reveal" style="margin-top:16px;text-align:center"><div class="quote">Komunikovat <b>hodnotu</b>, ne cenu. Zákazník musí rozumět, proč Red Bull stojí víc než levná alternativa.</div></div>
+  </div>
+</section>
+
+<section class="slide" data-slide="9">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:420px;height:420px;top:-70px;right:-70px;background:#173c8f;opacity:.34"></div>
+    <div class="blob" style="width:300px;height:300px;left:-40px;bottom:-50px;background:#d71920;opacity:.16"></div>
+    <div class="blob" style="width:220px;height:220px;left:25%;top:28%;background:#d4af37;opacity:.15"></div>
+  </div>
+  <canvas class="particle-canvas"></canvas>
+  <div class="content text-center">
+    <div class="eyebrow reveal">Závěr</div>
+    <h2 class="hero-title reveal" style="font-size:clamp(3rem,7vw,5.8rem);margin:.2rem 0 .5rem;background:linear-gradient(180deg,#fff 0%,#d4af37 140%);-webkit-background-clip:text;background-clip:text;color:transparent">Red Bull letí dál</h2>
+    <p class="quote reveal" style="margin-bottom:1.4rem">Silná značka, vysoká loajalita a jasná pozice dávají Red Bullu výhodu. Aby si ji udržel, musí kombinovat inovaci portfolia s modernější komunikací.</p>
+    <div class="reveal" style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap"><span class="label-chip">Jáchym</span><span class="label-chip">Leon</span><span class="label-chip">Kryštof</span><span class="label-chip">Patrik</span></div>
+  </div>
+</section>
+
+</div>
+<div class="nav-controls"><button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button><div class="slide-dots" id="dots"></div><button class="nav-btn" onclick="changeSlide(1)">&#8250;</button><span class="slide-counter" id="counter">1 / 9</span></div>
+<script>
+let current=1;const total=document.querySelectorAll('.slide').length;const dots=document.getElementById('dots');const counter=document.getElementById('counter');for(let i=1;i<=total;i++){const d=document.createElement('div');d.className='dot'+(i===1?' active':'');d.onclick=()=>goToSlide(i);dots.appendChild(d)}
+function goToSlide(n){document.querySelector('.slide.active')?.classList.remove('active');const next=document.querySelector(`.slide[data-slide="${n}"]`);if(next){next.classList.add('active');animateSlide(next)}current=n;updateNav()} function changeSlide(dir){let n=current+dir;if(n<1)n=total;if(n>total)n=1;goToSlide(n)} function updateNav(){document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i+1===current));counter.textContent=current+' / '+total}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();changeSlide(1)} if(e.key==='ArrowLeft'){e.preventDefault();changeSlide(-1)}});let touchStartX=0;document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX});document.addEventListener('touchend',e=>{const diff=touchStartX-e.changedTouches[0].clientX;if(Math.abs(diff)>50)changeSlide(diff>0?1:-1)})
+function animateSlide(slide){slide.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transition='none';el.style.opacity='0';el.style.transform='translateY(18px)';el.offsetHeight;const delay=i*0.08;el.style.transition=`opacity .35s ease ${delay}s, transform .35s ease ${delay}s`;el.style.opacity='1';el.style.transform='translateY(0)'})}
+(function(){document.addEventListener('mousemove',e=>{const s=document.querySelector('.mouse-spotlight');if(s)s.style.background=`radial-gradient(560px circle at ${e.clientX}px ${e.clientY}px, rgba(212,175,55,.06), transparent 42%)`})})();
+function initParticles(canvas, count=38, interactive=true){if(!canvas)return;const ctx=canvas.getContext('2d');function resize(){canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight}resize();window.addEventListener('resize',resize);let mx=-999,my=-999;const particles=Array.from({length:count},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,size:Math.random()*2+0.8,alpha:Math.random()*.25+.08,color:Math.random()>.55?'212,175,55':(Math.random()>.5?'215,25,32':'23,60,143')})); if(interactive){canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});canvas.addEventListener('mouseleave',()=>{mx=-999;my=-999})}
+(function loop(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{if(interactive){const dx=p.x-mx,dy=p.y-my,dist=Math.sqrt(dx*dx+dy*dy);if(dist<110){const force=(110-dist)/110;p.vx+=(dx/dist||0)*force*.04;p.vy+=(dy/dist||0)*force*.04}}p.vx*=.985;p.vy*=.985;p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=`rgba(${p.color},${p.alpha})`;ctx.fill()});requestAnimationFrame(loop)})()}
+document.querySelectorAll('.particle-canvas').forEach(c=>initParticles(c,50,true));document.querySelectorAll('.particle-canvas-ambient').forEach(c=>initParticles(c,20,false));try{animateSlide(document.querySelector('.slide.active'))}catch(e){}
+</script>
+</body>
+</html>
